@@ -157,51 +157,52 @@ Used by:
 ```bash
 git clone https://github.com/your-username/fastapi-backend-template.git
 cd fastapi-backend-template
-
+```
 ## 2. Create and Activate Virtual Environment
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-
+```
 ## 3.Install Dependencies
-
+```bash
 python -m pip install -U pip
 pip install -r requirements-dev.txt
-
+```
 ### 🐳 Database (Docker)
 
 Start PostgreSQL:
+```bash
 docker compose up -d db
 docker compose ps
-
+```
 The database is exposed locally, for example:
 localhost:5439
 
 ### Environment Variables
 
 Create a .env file from the example:
-
+```bash
 cp .env.example .env
-
+```
 Example .env:
-
+```bash
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5439/app
 JWT_SECRET_KEY=dev-secret
-
+```
 ### Database Migrations (Alembic)
 
 Check current migration state:
-
+```bash
 python -m alembic current
-
+```
 Generate migrations:
-
+```bash
 python -m alembic revision --autogenerate -m "init tables"
-
+```
 Apply migrations:
-
+```bash
 python -m alembic upgrade head
-
+```
 
 
