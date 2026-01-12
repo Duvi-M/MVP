@@ -205,4 +205,121 @@ Apply migrations:
 python -m alembic upgrade head
 ```
 
+### Seed Initial Admin User
 
+Create an admin user for the first login:
+```bash
+python -m scripts.seed_admin
+```
+
+Default credentials:
+
+- Email: admin@local.com
+- Password: admin123456
+
+### Run the API
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+```
+
+The API will be available at:
+```bash
+http://localhost:8001
+```
+
+### Authentication Flow
+Login (Admin)
+```bash
+curl -X POST "http://localhost:8001/api/v1/auth/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=admin@local.com&password=admin123456"
+```
+
+Response example:
+```bash
+{
+  "access_token": "...",
+  "refresh_token": "...",
+  "token_type": "bearer"
+}
+```
+
+Save the access token:
+```bash
+TOKEN="PASTE_ACCESS_TOKEN"
+```
+
+### User Management (Admin Only)
+Create User
+```bash
+curl -X POST "http://localhost:8001/api/v1/users/" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user1@local.com",
+    "password": "user123456",
+    "role": "user"
+  }'
+```
+
+### Tasks (Authenticated Users)
+Login as User
+```bash
+curl -X POST "http://localhost:8001/api/v1/auth/login" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "username=user1@local.com&password=user123456"
+```
+Save the user token:
+```bash
+USER_TOKEN="PASTE_USER_ACCESS_TOKEN"
+```
+
+Create Task
+```bash
+curl -X POST "http://localhost:8001/api/v1/tasks/" \
+  -H "Authorization: Bearer $USER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"My first task"}'
+```
+
+List My Tasks
+```bash
+curl -X GET "http://localhost:8001/api/v1/tasks/" \
+  -H "Authorization: Bearer $USER_TOKEN"
+```
+# Testing
+
+Tests are written using pytest and pytest-asyncio.
+```bash
+Run tests:
+```
+Recommended coverage:
+
+- Authentication success and failure
+- Protected endpoints
+- Ownership and permission checks
+
+### Code Quality
+
+Run linters and type checks:
+```bash
+ruff check .
+mypy app/
+```
+
+### Future Improvements
+
+- Refresh token rotation
+- Pagination utilities
+- Rate limiting
+- Health check endpoint
+- Background tasks
+- Coverage reporting in CI
+
+### Purpose of This Project
+
+- This repository is designed to:
+- Serve as a real FastAPI backend template
+- Demonstrate production-level backend engineering skills
+- Be easily extensible for real-world applications
+- Act as a portfolio project for backend engineers
