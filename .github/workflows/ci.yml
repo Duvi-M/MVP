@@ -25,11 +25,12 @@ jobs:
           --health-retries 5
 
     env:
-      # OJO: en CI usamos localhost (no "db") porque el runner es el host.
+      PYTHONPATH: .
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/app_test
       JWT_SECRET_KEY: ci-secret-key
       ENV: ci
       DEBUG: "false"
+
 
     steps:
       - name: Checkout
