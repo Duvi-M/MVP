@@ -8,7 +8,7 @@ from app.core.security import hash_password
 from app.models.user import User
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com")
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@local.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123456")
 
 
@@ -22,7 +22,6 @@ async def main() -> None:
     async with SessionLocal() as db:
         q = await db.execute(select(User).where(User.email == ADMIN_EMAIL))
         exists = q.scalar_one_or_none()
-
         if exists:
             print(f"Admin already exists: {ADMIN_EMAIL}")
             return
